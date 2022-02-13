@@ -1,0 +1,68 @@
+diff -up itcl4.1.1/configure.libdir itcl4.1.1/configure
+--- itcl4.1.1/configure.libdir	2017-12-15 11:00:37.000000000 -0700
++++ itcl4.1.1/configure	2019-09-18 20:55:19.546106510 -0600
+@@ -8957,7 +8957,7 @@ $as_echo "${TCLSH_PROG}" >&6; }
+ 	eval itcl_STUB_LIB_FLAG="-litclstub`echo ${PACKAGE_VERSION} | tr -d .`"
+     fi
+     itcl_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${itcl_LIB_FLAG}"
+-    itcl_LIB_SPEC="-L`$CYGPATH ${pkglibdir}` ${itcl_LIB_FLAG}"
++    itcl_LIB_SPEC="-L`$CYGPATH ${libdir}` ${itcl_LIB_FLAG}"
+     itcl_BUILD_STUB_LIB_SPEC="-L`$CYGPATH $(pwd)` ${itcl_STUB_LIB_FLAG}"
+     itcl_STUB_LIB_SPEC="-L`$CYGPATH ${pkglibdir}` ${itcl_STUB_LIB_FLAG}"
+     itcl_BUILD_STUB_LIB_PATH="`$CYGPATH $(pwd)`/${PKG_STUB_LIB_FILE}"
+diff -up itcl4.1.1/Makefile.in.libdir itcl4.1.1/Makefile.in
+--- itcl4.1.1/Makefile.in.libdir	2016-07-12 10:59:19.000000000 -0600
++++ itcl4.1.1/Makefile.in	2019-09-18 20:55:19.547106534 -0600
+@@ -81,8 +81,8 @@ mandir		= @mandir@
+ DESTDIR		=
+ 
+ PKG_DIR		= $(PACKAGE_NAME)$(PACKAGE_VERSION)
+-pkgdatadir	= $(datadir)/$(PKG_DIR)
+-pkglibdir	= $(libdir)/$(PKG_DIR)
++pkgdatadir	= $(datadir)/tcl@TCL_VERSION@/$(PKG_DIR)
++pkglibdir	= $(libdir)/tcl@TCL_VERSION@/$(PKG_DIR)
+ pkgincludedir	= $(includedir)/$(PKG_DIR)
+ 
+ top_builddir	= @abs_top_builddir@
+@@ -380,15 +380,17 @@ install-lib-binaries: binaries
+ 	@$(INSTALL_DATA_DIR) $(DESTDIR)$(pkglibdir)
+ 	@list='$(lib_BINARIES)'; for p in $$list; do \
+ 	  if test -f $$p; then \
+-	    echo " $(INSTALL_LIBRARY) $$p $(DESTDIR)$(pkglibdir)/$$p"; \
+-	    $(INSTALL_LIBRARY) $$p $(DESTDIR)$(pkglibdir)/$$p; \
+ 	    stub=`echo $$p|sed -e "s/.*\(stub\).*/\1/"`; \
+ 	    if test "x$$stub" = "xstub"; then \
++		echo " $(INSTALL_LIBRARY) $$p $(DESTDIR)$(pkglibdir)/$$p"; \
++		$(INSTALL_LIBRARY) $$p $(DESTDIR)$(pkglibdir)/$$p; \
+ 		echo " $(RANLIB_STUB) $(DESTDIR)$(pkglibdir)/$$p"; \
+ 		$(RANLIB_STUB) $(DESTDIR)$(pkglibdir)/$$p; \
+ 	    else \
+-		echo " $(RANLIB) $(DESTDIR)$(pkglibdir)/$$p"; \
+-		$(RANLIB) $(DESTDIR)$(pkglibdir)/$$p; \
++		echo " $(INSTALL_PROGRAM) $$p $(DESTDIR)$(libdir)/$$p"; \
++		$(INSTALL_PROGRAM) $$p $(DESTDIR)$(libdir)/$$p; \
++		echo " $(RANLIB) $(DESTDIR)$(libdir)/$$p"; \
++		$(RANLIB) $(DESTDIR)$(libdir)/$$p; \
+ 	    fi; \
+ 	    ext=`echo $$p|sed -e "s/.*\.//"`; \
+ 	    if test "x$$ext" = "xdll"; then \
+@@ -411,7 +413,7 @@ install-lib-binaries: binaries
+ 	    echo " Install pkgIndex.tcl $(DESTDIR)$(pkglibdir)"; \
+ 	    $(INSTALL_DATA) pkgIndex.tcl $(DESTDIR)$(pkglibdir); \
+ 	fi
+-	$(INSTALL_DATA) itclConfig.sh $(DESTDIR)$(pkglibdir)
++	$(INSTALL_DATA) itclConfig.sh $(DESTDIR)$(libdir)
+ 
+ #========================================================================
+ # Install binary executables (e.g. .exe files and dependent .dll files)
+diff -up itcl4.1.1/pkgIndex.tcl.in.libdir itcl4.1.1/pkgIndex.tcl.in
+--- itcl4.1.1/pkgIndex.tcl.in.libdir	2019-09-18 20:55:19.547106534 -0600
++++ itcl4.1.1/pkgIndex.tcl.in	2019-09-18 20:56:11.077089976 -0600
+@@ -2,5 +2,5 @@
+ 
+ if {![package vsatisfies [package provide Tcl] 8.6-]} {return}
+ 
+-package ifneeded itcl @PACKAGE_VERSION@ [list load [file join $dir "@PKG_LIB_FILE@"] itcl]
+-package ifneeded Itcl @PACKAGE_VERSION@ [list load [file join $dir "@PKG_LIB_FILE@"] itcl]
++package ifneeded itcl @PACKAGE_VERSION@ [list load [file join $dir .. .. "@PKG_LIB_FILE@"] itcl]
++package ifneeded Itcl @PACKAGE_VERSION@ [list load [file join $dir .. .. "@PKG_LIB_FILE@"] itcl]

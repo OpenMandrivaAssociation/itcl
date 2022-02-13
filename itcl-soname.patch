@@ -1,0 +1,12 @@
+diff -up itcl4.1.1/configure.soname itcl4.1.1/configure
+--- itcl4.1.1/configure.soname	2019-09-18 20:56:27.425344337 -0600
++++ itcl4.1.1/configure	2019-09-18 20:57:20.272014576 -0600
+@@ -7338,7 +7338,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic -Wl,-soname,\${@}"
+ 	    if test $doRpath = yes; then :
+ 
+ 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
