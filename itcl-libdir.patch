@@ -2,7 +2,7 @@ diff -up itcl4.1.1/configure.libdir itcl4.1.1/configure
 --- itcl4.1.1/configure.libdir	2017-12-15 11:00:37.000000000 -0700
 +++ itcl4.1.1/configure	2019-09-18 20:55:19.546106510 -0600
 @@ -8957,7 +8957,7 @@ $as_echo "${TCLSH_PROG}" >&6; }
- 	eval itcl_STUB_LIB_FLAG="-litclstub`echo ${PACKAGE_VERSION} | tr -d .`"
+ 	eval itcl_STUB_LIB_FLAG="-litclstub`echo ${PACKAGE_VERSION} | tr -d .`${DBGX}"
      fi
      itcl_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${itcl_LIB_FLAG}"
 -    itcl_LIB_SPEC="-L`$CYGPATH ${pkglibdir}` ${itcl_LIB_FLAG}"
@@ -23,7 +23,7 @@ diff -up itcl4.1.1/Makefile.in.libdir itcl4.1.1/Makefile.in
 +pkglibdir	= $(libdir)/tcl@TCL_VERSION@/$(PKG_DIR)
  pkgincludedir	= $(includedir)/$(PKG_DIR)
  
- top_builddir	= @abs_top_builddir@
+ top_builddir	= .
 @@ -380,15 +380,17 @@ install-lib-binaries: binaries
  	@$(INSTALL_DATA_DIR) $(DESTDIR)$(pkglibdir)
  	@list='$(lib_BINARIES)'; for p in $$list; do \
