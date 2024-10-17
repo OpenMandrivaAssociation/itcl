@@ -6,7 +6,7 @@ Name:           itcl
 Version:        4.1.1
 Release:        1
 License:        TCL
-URL:            http://incrtcl.sourceforge.net/itcl/
+URL:            https://incrtcl.sourceforge.net/itcl/
 Source0:        https://downloads.sourceforge.net/incrtcl/itcl%{version}.tar.gz
 Patch1:         itcl-libdir.patch
 Patch2:         itcl-soname.patch
